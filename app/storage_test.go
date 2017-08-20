@@ -20,13 +20,13 @@ func TestStorage_SetAndSuccessGet(t *testing.T) {
 
 	storage.Set(key, value, time.Minute)
 
-	actualValue, err := storage.Get(key)
+	actualItem, err := storage.Get(key)
 	if err != nil {
 		t.Errorf("Error on get item value: %v", err)
 	}
 
-	if actualValue != value {
-		t.Errorf("Expected %s, but got %v", value, actualValue)
+	if actualItem.value != value {
+		t.Errorf("Expected %s, but got %v", value, actualItem.value)
 	}
 }
 
@@ -37,11 +37,7 @@ func TestStorage_GetExpired(t *testing.T) {
 
 	storage.Set(key, value, -1)
 
-	actualValue, err := storage.Get(key)
-	if actualValue != nil {
-		t.Errorf("Value of expired item should be nil, but got %v", actualValue)
-	}
-
+	_, err := storage.Get(key)
 	if err != errNotFound {
 		t.Errorf("Error on get expired item's value should be errNotFound, but got: %v", err)
 	}
@@ -51,9 +47,9 @@ func TestStorage_GetNotExist(t *testing.T) {
 	storage := newStorage()
 	key := "testkey"
 
-	actualValue, err := storage.Get(key)
-	if actualValue != nil {
-		t.Errorf("Value of not existing item should be nil, but got %v", actualValue)
+	actualItem, err := storage.Get(key)
+	if actualItem.value != nil {
+		t.Errorf("Value of not existing item should be nil, but got %v", actualItem)
 	}
 
 	if err != errNotFound {
@@ -68,13 +64,13 @@ func TestStorage_Incr(t *testing.T) {
 
 	storage.Set(key, value, time.Minute)
 
-	incrementedValue, err := storage.Incr("testkey")
+	incrementedItem, err := storage.Incr("testkey")
 	if err != nil {
 		t.Errorf("Error on increment: %v", err)
 	}
 
-	if incrementedValue != value + 1 {
-		t.Errorf("Incremented value should be %f, but got %v", value + 1, incrementedValue)
+	if incrementedItem.value != value + 1 {
+		t.Errorf("Incremented value should be %f, but got %v", value + 1, incrementedItem.value)
 	}
 }
 
@@ -85,11 +81,7 @@ func TestStorage_IncrWrongType(t *testing.T) {
 
 	storage.Set(key, value, time.Minute)
 
-	incrementedValue, err := storage.Incr("testkey")
-	if incrementedValue != nil {
-		t.Errorf("Incremented wrong type value should be nil, but got %v", incrementedValue)
-	}
-
+	_, err := storage.Incr("testkey")
 	if err != errWrongType {
 		t.Errorf("Error on increment wrong type value should be errWrongType, but got: %v", err)
 	}
@@ -98,14 +90,31 @@ func TestStorage_IncrWrongType(t *testing.T) {
 func TestStorage_IncrNotFound(t *testing.T) {
 	storage := newStorage()
 
-	incrementedValue, err := storage.Incr("testkey")
-	if incrementedValue != nil {
-		t.Errorf("Result of increment not existing item should be nil, but got %v", incrementedValue)
+	incrementedItem, err := storage.Incr("testkey")
+	if incrementedItem.value != nil {
+		t.Errorf("Result of increment not existing item should be nil, but got %v", incrementedItem.value)
 	}
 
 	if err != errNotFound {
 		t.Errorf("Error on increment not existing item's value should be errNotFound, but got: %v", err)
 	}
+}
+
+func TestStorage_Delete(t *testing.T) {
+	storage := newStorage()
+	key := "testkey"
+	value := "testvalue"
+
+	storage.Set(key, value, time.Minute)
+
+	storage.Delete(key)
+
+	_, err := storage.Get(key)
+	if err != errNotFound {
+		t.Errorf("Unexpected error on get removed item: %v", err)
+	}
+
+	storage.Delete("404")
 }
 
 func TestStorage_Clean(t *testing.T) {
@@ -127,13 +136,13 @@ func TestStorage_Clean(t *testing.T) {
 		t.Errorf("Expect not found error, but got %v", err)
 	}
 
-	actualValue, err := storage.Get(key)
+	actualItem, err := storage.Get(key)
 	if err != nil {
 		t.Errorf("Error on get value after cleanup: %v", err)
 	}
 
-	if actualValue != value {
-		t.Errorf("Expect %s value, but got %v", value, actualValue)
+	if actualItem.value != value {
+		t.Errorf("Expect %s value, but got %v", value, actualItem)
 	}
 
 	if len(storage.items) != 1 {

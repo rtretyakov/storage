@@ -38,13 +38,13 @@ func TestCleaner_Start(t *testing.T) {
 		t.Errorf("Expect not found error, but got %v", err)
 	}
 
-	actualValue, err := storage.Get(key)
+	actualItem, err := storage.Get(key)
 	if err != nil {
 		t.Errorf("Error on get value after cleanup: %v", err)
 	}
 
-	if actualValue != value {
-		t.Errorf("Expect %s value, but got %v", value, actualValue)
+	if actualItem.value != value {
+		t.Errorf("Expect %s value, but got %v", value, actualItem.value)
 	}
 
 	if len(storage.items) != 1 {

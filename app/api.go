@@ -1,14 +1,6 @@
 package app
 
-type createItemRequest struct {
-	Value interface{}
-	Ttl   int
-}
-
-type getItemResponse struct {
+type itemInfo struct {
 	Value interface{} `json:"value"`
-}
-
-type incrItemResponse struct {
-	Value float64 `json:"value"`
+	Ttl int `json:"ttl"`
 }

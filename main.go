@@ -24,6 +24,7 @@ func main() {
 	r.Put("/items/{key}", a.CreateItemHandler)
 	r.Post("/items/{key}/incr", a.IncrItemHandler)
 	r.Get("/items/{key}", a.GetItemHandler)
+	r.Delete("/items/{key}", a.DeleteItemHandler)
 
 	log.Println("Starting HTTP Server...")
 	http.ListenAndServe(":8080", r)
