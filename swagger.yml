@@ -1,0 +1,98 @@
+swagger: '2.0'
+info:
+  description: Storage API
+  version: 1.0.0
+  title: Storage API
+  contact:
+    email: renat.tretyakov@gmail.com
+
+paths:
+  /items/{key}:
+    get:
+      summary: shows item
+      operationId: getItem
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: key
+        description: key of item
+        required: true
+        type: string
+      responses:
+        200:
+          description: item
+          schema:
+            $ref: '#/definitions/Item'
+        404:
+          description: item not found
+    put:
+      summary: put new item
+      operationId: createItem
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: key
+        description: key of item
+        required: true
+        type: string
+      - in: body
+        name: item
+        description: item
+        required: true
+        schema:
+          $ref: '#/definitions/Item'
+      responses:
+        200:
+          description: success
+        400:
+          description: bad request
+    delete:
+      summary: removes item
+      operationId: deleteItem
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: key
+        description: key of item
+        required: true
+        type: string
+      responses:
+        204:
+          description: item was deleted
+  /items/{key}/incr:
+    post:
+      summary: increment item's value
+      operationId: incrItem
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: key
+        description: key of item
+        required: true
+        type: string
+      responses:
+        200:
+          description: item's value was incremented
+        404:
+          description: item not found
+definitions:
+  Item:
+    required:
+    - value
+    - ttl
+    properties:
+      value:
+        description: value
+      ttl:
+        type: number
+        format: int
+        description: Time to live (seconds)
+
+host: virtserver.swaggerhub.com
+basePath: /rtretyakov/storage/1.0.0
+schemes:
+ - https
