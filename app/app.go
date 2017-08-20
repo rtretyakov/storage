@@ -1,11 +1,11 @@
 package app
 
 import (
-	"net/http"
 	"encoding/json"
-	"time"
-	"log"
 	"github.com/go-chi/chi"
+	"log"
+	"net/http"
+	"time"
 )
 
 type app struct {

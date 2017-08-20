@@ -1,8 +1,8 @@
 package app
 
 import (
-	"time"
 	"sync"
+	"time"
 )
 
 type storage struct {

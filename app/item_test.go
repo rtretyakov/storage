@@ -20,8 +20,8 @@ func TestNewItem(t *testing.T) {
 
 func TestItem_IsExpired(t *testing.T) {
 	value := "testval"
-	tests := []struct{
-		ttl time.Duration
+	tests := []struct {
+		ttl            time.Duration
 		expectedResult bool
 	}{
 		{time.Minute, false},

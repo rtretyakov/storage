@@ -69,8 +69,8 @@ func TestStorage_Incr(t *testing.T) {
 		t.Errorf("Error on increment: %v", err)
 	}
 
-	if incrementedItem.value != value + 1 {
-		t.Errorf("Incremented value should be %f, but got %v", value + 1, incrementedItem.value)
+	if incrementedItem.value != value+1 {
+		t.Errorf("Incremented value should be %f, but got %v", value+1, incrementedItem.value)
 	}
 }
 

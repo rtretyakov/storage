@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/go-chi/chi"
-	"net/http"
-	"github.com/rtretyakov/storage/app"
-	"log"
-	"github.com/go-chi/chi/middleware"
-	"time"
 	"flag"
 	"fmt"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/rtretyakov/storage/app"
+	"log"
+	"net/http"
+	"time"
 )
 
 func main() {
