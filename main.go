@@ -8,10 +8,12 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"time"
 	"flag"
+	"fmt"
 )
 
 func main() {
 	cleanupInterval := flag.Duration("i", time.Minute, "cleanup interval")
+	port := flag.Int("p", 8080, "port")
 	flag.Parse()
 
 	a := app.NewApp(*cleanupInterval)
@@ -26,6 +28,6 @@ func main() {
 	r.Get("/items/{key}", a.GetItemHandler)
 	r.Delete("/items/{key}", a.DeleteItemHandler)
 
-	log.Println("Starting HTTP Server...")
-	http.ListenAndServe(":8080", r)
+	log.Printf("Starting HTTP Server on %d port...", *port)
+	log.Fatalln(http.ListenAndServe(fmt.Sprintf(":%d", *port), r))
 }
